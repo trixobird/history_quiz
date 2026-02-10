@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node --version:*)",
+      "Bash(npm:*)",
+      "Bash(npx --version:*)",
+      "WebFetch(domain:authjs.dev)",
+      "WebFetch(domain:ui.shadcn.com)",
+      "Bash(pnpm create:*)",
+      "Bash(pnpm run build:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm dlx shadcn@latest init:*)",
+      "Bash(pnpm dlx shadcn@latest add:*)",
+      "Bash(pnpm add:*)",
+      "Bash(pnpm approve-builds:*)",
+      "Bash(pnpm config set:*)",
+      "Bash(pnpm rebuild:*)",
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm exec prisma:*)",
+      "Bash(pnpm exec node:*)",
+      "Bash(psql:*)",
+      "Bash(pnpm run dev:*)",
+      "Bash(pnpm run lint:*)"
+    ]
+  }
+}

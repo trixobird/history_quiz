@@ -1,0 +1,170 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================
+// AUTH.JS REQUIRED MODELS
+// ============================================================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+
+  accounts     Account[]
+  sessions     Session[]
+
+  quizAttempts QuizAttempt[]
+
+  totalPoints   Int       @default(0)
+  currentStreak Int       @default(0)
+  longestStreak Int       @default(0)
+  level         Int       @default(1)
+  lastQuizDate  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ============================================================
+// QUIZ DOMAIN MODELS
+// ============================================================
+
+enum Era {
+  ANCIENT_WORLD
+  MEDIEVAL
+  RENAISSANCE
+  AGE_OF_EXPLORATION
+  INDUSTRIAL_REVOLUTION
+  WORLD_WAR_1
+  WORLD_WAR_2
+  COLD_WAR
+  MODERN_HISTORY
+  MIXED_GENERAL
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+  EXPERT
+}
+
+model Quiz {
+  id          String @id @default(cuid())
+  title       String
+  description String
+  era         Era
+
+  questions Question[]
+  attempts  QuizAttempt[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Question {
+  id              String     @id @default(cuid())
+  quizId          String
+  text            String
+  explanation     String?
+  difficulty      Difficulty
+  orderIndex      Int
+  multipleCorrect Boolean    @default(false)
+
+  quiz        Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  options     Option[]
+  userAnswers UserAnswer[]
+
+  @@index([quizId])
+}
+
+model Option {
+  id         String  @id @default(cuid())
+  questionId String
+  text       String
+  isCorrect  Boolean @default(false)
+  orderIndex Int
+
+  question    Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  userAnswers UserAnswer[]
+
+  @@index([questionId])
+}
+
+model QuizAttempt {
+  id          String    @id @default(cuid())
+  userId      String
+  quizId      String
+  score       Int       @default(0)
+  maxScore    Int       @default(0)
+  percentage  Float     @default(0)
+  completedAt DateTime?
+  startedAt   DateTime  @default(now())
+
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz    Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers UserAnswer[]
+
+  @@index([userId])
+  @@index([quizId])
+  @@index([userId, completedAt])
+}
+
+model UserAnswer {
+  id            String   @id @default(cuid())
+  attemptId     String
+  questionId    String
+  isCorrect     Boolean  @default(false)
+  pointsEarned  Int      @default(0)
+  answeredAt    DateTime @default(now())
+
+  attempt         QuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question        Question    @relation(fields: [questionId], references: [id])
+  selectedOptions Option[]
+
+  @@unique([attemptId, questionId])
+  @@index([attemptId])
+}
