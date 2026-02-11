@@ -1,17 +1,22 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { getLocale } from "@/lib/i18n/get-locale"
+import { getDictionary } from "@/lib/i18n/dictionaries"
 
-export default function NotFound() {
+export default async function NotFound() {
+  const locale = await getLocale()
+  const dict = getDictionary(locale)
+
   return (
     <div className="flex min-h-screen items-center justify-center">
       <div className="text-center space-y-4">
         <div className="text-6xl">🗺️</div>
-        <h1 className="text-4xl font-bold">Page Not Found</h1>
+        <h1 className="text-4xl font-bold">{dict.notFoundTitle}</h1>
         <p className="text-muted-foreground">
-          Looks like this chapter of history hasn&apos;t been written yet.
+          {dict.notFoundText}
         </p>
         <Button asChild>
-          <Link href="/">Go Home</Link>
+          <Link href="/">{dict.goHome}</Link>
         </Button>
       </div>
     </div>

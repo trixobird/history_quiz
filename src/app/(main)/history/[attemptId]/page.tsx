@@ -3,6 +3,8 @@ import { notFound } from "next/navigation"
 import { ResultsSummary } from "@/components/quiz/results-summary"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
+import { getLocale } from "@/lib/i18n/get-locale"
+import { getDictionary } from "@/lib/i18n/dictionaries"
 
 export default async function HistoryDetailPage({
   params,
@@ -10,6 +12,8 @@ export default async function HistoryDetailPage({
   params: Promise<{ attemptId: string }>
 }) {
   const { attemptId } = await params
+  const locale = await getLocale()
+  const dict = getDictionary(locale)
 
   let attempt
   try {
@@ -26,20 +30,23 @@ export default async function HistoryDetailPage({
         className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
       >
         <ArrowLeft className="h-4 w-4" />
-        Back to history
+        {dict.backToHistory}
       </Link>
 
       <div>
         <h1 className="text-2xl font-bold">{attempt.quiz.title}</h1>
         <p className="text-sm text-muted-foreground">
-          Completed{" "}
+          {dict.completed}{" "}
           {attempt.completedAt
-            ? new Date(attempt.completedAt).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })
-            : "In progress"}
+            ? new Date(attempt.completedAt).toLocaleDateString(
+                locale === "el" ? "el-GR" : "en-US",
+                {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                }
+              )
+            : dict.inProgress}
         </p>
       </div>
 

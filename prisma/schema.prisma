@@ -22,6 +22,7 @@ model User {
 
   quizAttempts QuizAttempt[]
 
+  locale        String    @default("en")
   totalPoints   Int       @default(0)
   currentStreak Int       @default(0)
   longestStreak Int       @default(0)
@@ -93,10 +94,11 @@ enum Difficulty {
 }
 
 model Quiz {
-  id          String @id @default(cuid())
-  title       String
-  description String
-  era         Era
+  id           String @id @default(cuid())
+  title        String
+  description  String
+  era          Era
+  translations Json?
 
   questions Question[]
   attempts  QuizAttempt[]
@@ -113,6 +115,7 @@ model Question {
   difficulty      Difficulty
   orderIndex      Int
   multipleCorrect Boolean    @default(false)
+  translations    Json?
 
   quiz        Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
   options     Option[]
@@ -122,11 +125,12 @@ model Question {
 }
 
 model Option {
-  id         String  @id @default(cuid())
-  questionId String
-  text       String
-  isCorrect  Boolean @default(false)
-  orderIndex Int
+  id           String  @id @default(cuid())
+  questionId   String
+  text         String
+  isCorrect    Boolean @default(false)
+  orderIndex   Int
+  translations Json?
 
   question    Question     @relation(fields: [questionId], references: [id], onDelete: Cascade)
   userAnswers UserAnswer[]

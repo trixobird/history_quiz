@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { DifficultyBadge } from "./difficulty-badge"
 import { Difficulty } from "@prisma/client"
+import { useLocale } from "@/lib/i18n/locale-context"
 
 interface Option {
   id: string
@@ -31,6 +32,7 @@ export function QuestionDisplay({
   isSubmitting,
 }: QuestionDisplayProps) {
   const [selected, setSelected] = useState<string[]>([])
+  const { dict } = useLocale()
 
   function toggleOption(optionId: string) {
     if (question.multipleCorrect) {
@@ -51,7 +53,7 @@ export function QuestionDisplay({
           <DifficultyBadge difficulty={question.difficulty} />
           {question.multipleCorrect && (
             <span className="text-xs text-muted-foreground">
-              (Select all that apply)
+              {dict.selectAllThatApply}
             </span>
           )}
         </div>
@@ -99,7 +101,7 @@ export function QuestionDisplay({
           className="w-full mt-4"
           size="lg"
         >
-          {isSubmitting ? "Submitting..." : "Submit Answer"}
+          {isSubmitting ? dict.submitting : dict.submitAnswer}
         </Button>
       </CardContent>
     </Card>

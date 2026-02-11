@@ -2,8 +2,40 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
 import { BookOpen, Trophy, Flame, Brain } from "lucide-react"
+import { getLocale } from "@/lib/i18n/get-locale"
+import { getDictionary } from "@/lib/i18n/dictionaries"
 
-export default function HomePage() {
+export default async function HomePage() {
+  const locale = await getLocale()
+  const dict = getDictionary(locale)
+
+  const features = [
+    {
+      icon: BookOpen,
+      title: dict.homeFeature1Title,
+      description: dict.homeFeature1Desc,
+      gradient: "from-violet-500 to-purple-700",
+    },
+    {
+      icon: Brain,
+      title: dict.homeFeature2Title,
+      description: dict.homeFeature2Desc,
+      gradient: "from-amber-400 to-orange-600",
+    },
+    {
+      icon: Trophy,
+      title: dict.homeFeature3Title,
+      description: dict.homeFeature3Desc,
+      gradient: "from-yellow-400 to-amber-600",
+    },
+    {
+      icon: Flame,
+      title: dict.homeFeature4Title,
+      description: dict.homeFeature4Desc,
+      gradient: "from-orange-400 to-red-600",
+    },
+  ]
+
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
@@ -12,20 +44,18 @@ export default function HomePage() {
           <div className="text-6xl mb-6">🏛️</div>
           <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight">
             <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              History Quiz
+              {dict.appName}
             </span>
           </h1>
           <p className="mt-4 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
-            Test your knowledge across the ages — from ancient empires to the
-            modern world. Earn points, climb the leaderboard, and become a
-            legendary historian.
+            {dict.homeHeroText}
           </p>
           <div className="mt-8 flex gap-4 justify-center">
             <Button asChild size="lg" className="text-lg px-8">
-              <Link href="/sign-in">Get Started</Link>
+              <Link href="/sign-in">{dict.getStarted}</Link>
             </Button>
             <Button asChild variant="outline" size="lg" className="text-lg px-8">
-              <Link href="/sign-in">Sign In</Link>
+              <Link href="/sign-in">{dict.signIn}</Link>
             </Button>
           </div>
         </div>
@@ -34,39 +64,10 @@ export default function HomePage() {
       {/* Features */}
       <section className="container mx-auto px-4 py-16">
         <h2 className="text-3xl font-bold text-center mb-12">
-          Why You&apos;ll Love It
+          {dict.homeWhyTitle}
         </h2>
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {[
-            {
-              icon: BookOpen,
-              title: "10 Historical Eras",
-              description:
-                "From Ancient Rome to the Cold War, explore quizzes spanning all of human history.",
-              gradient: "from-violet-500 to-purple-700",
-            },
-            {
-              icon: Brain,
-              title: "Progressive Difficulty",
-              description:
-                "Each quiz ramps up from easy to expert. How far can you go?",
-              gradient: "from-amber-400 to-orange-600",
-            },
-            {
-              icon: Trophy,
-              title: "Global Leaderboard",
-              description:
-                "Compete with players worldwide. Earn points and climb the ranks.",
-              gradient: "from-yellow-400 to-amber-600",
-            },
-            {
-              icon: Flame,
-              title: "Streaks & Levels",
-              description:
-                "Keep your streak alive and level up from History Novice to Legendary Oracle.",
-              gradient: "from-orange-400 to-red-600",
-            },
-          ].map((feature) => (
+          {features.map((feature) => (
             <Card key={feature.title} className="overflow-hidden group hover:shadow-lg transition-shadow">
               <div className={`h-1.5 bg-gradient-to-r ${feature.gradient}`} />
               <CardContent className="pt-6 text-center">
@@ -87,11 +88,10 @@ export default function HomePage() {
       <section className="bg-gradient-to-r from-primary to-accent py-16">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
-            Ready to Test Your Knowledge?
+            {dict.homeCtaTitle}
           </h2>
           <p className="text-white/80 mb-8 max-w-lg mx-auto">
-            Join for free with just your email. No passwords to remember —
-            just click the magic link and start quizzing!
+            {dict.homeCtaText}
           </p>
           <Button
             asChild
@@ -99,7 +99,7 @@ export default function HomePage() {
             variant="secondary"
             className="text-lg px-8"
           >
-            <Link href="/sign-in">Start Playing Now</Link>
+            <Link href="/sign-in">{dict.homeCtaButton}</Link>
           </Button>
         </div>
       </section>
@@ -107,7 +107,7 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="border-t py-8">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>History Quiz — Test your knowledge across the ages</p>
+          <p>{dict.homeFooter}</p>
         </div>
       </footer>
     </div>

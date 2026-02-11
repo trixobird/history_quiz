@@ -3,6 +3,8 @@ import { Badge } from "@/components/ui/badge"
 import { DifficultyBadge } from "./difficulty-badge"
 import { CheckCircle2, XCircle } from "lucide-react"
 import { Difficulty } from "@prisma/client"
+import { getLocale } from "@/lib/i18n/get-locale"
+import { getDictionary } from "@/lib/i18n/dictionaries"
 
 interface Option {
   id: string
@@ -29,12 +31,14 @@ interface ResultsSummaryProps {
   answers: Answer[]
 }
 
-export function ResultsSummary({
+export async function ResultsSummary({
   score,
   maxScore,
   percentage,
   answers,
 }: ResultsSummaryProps) {
+  const locale = await getLocale()
+  const dict = getDictionary(locale)
   const correctCount = answers.filter((a) => a.isCorrect).length
 
   return (
@@ -42,7 +46,7 @@ export function ResultsSummary({
       <Card className="border-2">
         <CardHeader className="text-center pb-2">
           <CardTitle className="text-3xl">
-            {percentage >= 80 ? "Excellent!" : percentage >= 50 ? "Good effort!" : "Keep learning!"}
+            {percentage >= 80 ? dict.excellent : percentage >= 50 ? dict.goodEffort : dict.keepLearning}
           </CardTitle>
         </CardHeader>
         <CardContent className="text-center space-y-4">
@@ -52,18 +56,18 @@ export function ResultsSummary({
           <div className="flex justify-center gap-6 text-sm">
             <div>
               <span className="font-semibold">{score}</span>
-              <span className="text-muted-foreground"> / {maxScore} points</span>
+              <span className="text-muted-foreground"> / {maxScore} {dict.points}</span>
             </div>
             <div>
               <span className="font-semibold">{correctCount}</span>
-              <span className="text-muted-foreground"> / {answers.length} correct</span>
+              <span className="text-muted-foreground"> / {answers.length} {dict.correct}</span>
             </div>
           </div>
         </CardContent>
       </Card>
 
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Question Breakdown</h3>
+        <h3 className="text-lg font-semibold">{dict.questionBreakdown}</h3>
         {answers.map((answer, i) => {
           const selectedIds = new Set(answer.selectedOptions.map((o) => o.id))
           return (
@@ -105,9 +109,9 @@ export function ResultsSummary({
 
                     return (
                       <div key={option.id} className={className}>
-                        {wasSelected ? "→ " : "  "}
+                        {wasSelected ? "\u2192 " : "  "}
                         {option.text}
-                        {isCorrect && " ✓"}
+                        {isCorrect && " \u2713"}
                       </div>
                     )
                   })}

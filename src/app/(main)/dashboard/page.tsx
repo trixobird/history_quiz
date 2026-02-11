@@ -8,7 +8,8 @@ import { Progress } from "@/components/ui/progress"
 import { StatsCard } from "@/components/gamification/stats-card"
 import { LevelBadge } from "@/components/gamification/level-badge"
 import { getNextLevel } from "@/lib/gamification"
-import { ERA_LABELS } from "@/lib/constants"
+import { getLocale } from "@/lib/i18n/get-locale"
+import { getDictionary, getEraLabel, getLevelTitle, t } from "@/lib/i18n/dictionaries"
 import { Star, BookOpen, Target, Flame, ArrowRight } from "lucide-react"
 import Link from "next/link"
 
@@ -16,29 +17,32 @@ export default async function DashboardPage() {
   const session = await auth()
   if (!session?.user) redirect("/sign-in")
 
-  const [stats, history, quizzes] = await Promise.all([
+  const [stats, history, quizzes, locale] = await Promise.all([
     getUserStats(),
     getUserHistory(),
     getQuizzes(),
+    getLocale(),
   ])
 
+  const dict = getDictionary(locale)
   const nextLevel = getNextLevel(stats.totalPoints)
   const recentAttempts = history.slice(0, 5)
 
-  // Find a quiz the user hasn't taken yet
   const takenQuizIds = new Set(history.map((a) => a.quiz.id))
   const recommendedQuiz = quizzes.find((q) => !takenQuizIds.has(q.id))
+
+  const userName = session.user.name || dict.quizPlayer
 
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-bold">
-          Welcome back, {session.user.name || "Quiz Player"}!
+          {t(dict.welcomeBack, { name: userName })}
         </h1>
         <div className="flex items-center gap-2 mt-2">
           <LevelBadge level={stats.level} />
           <span className="text-muted-foreground">
-            &middot; {stats.totalPoints.toLocaleString()} points
+            &middot; {stats.totalPoints.toLocaleString()} {dict.points}
           </span>
         </div>
       </div>
@@ -48,10 +52,10 @@ export default async function DashboardPage() {
           <CardContent className="pt-4 space-y-2">
             <div className="flex justify-between text-sm">
               <span className="text-muted-foreground">
-                Next: Lv.{nextLevel.level} {nextLevel.title}
+                {t(dict.nextLevel, { level: nextLevel.level, title: getLevelTitle(nextLevel.level, dict) })}
               </span>
               <span className="font-medium">
-                {nextLevel.pointsNeeded.toLocaleString()} pts to go
+                {t(dict.ptsToGo, { pts: nextLevel.pointsNeeded.toLocaleString() })}
               </span>
             </div>
             <Progress value={nextLevel.progress} className="h-2" />
@@ -61,25 +65,25 @@ export default async function DashboardPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatsCard
-          label="Total Points"
+          label={dict.totalPoints}
           value={stats.totalPoints.toLocaleString()}
           icon={Star}
           gradient="from-primary to-accent"
         />
         <StatsCard
-          label="Quizzes Completed"
+          label={dict.quizzesCompleted}
           value={stats.completedQuizzes}
           icon={BookOpen}
           gradient="from-emerald-400 to-teal-600"
         />
         <StatsCard
-          label="Average Score"
+          label={dict.averageScore}
           value={`${stats.averageScore}%`}
           icon={Target}
           gradient="from-amber-400 to-orange-600"
         />
         <StatsCard
-          label="Current Streak"
+          label={dict.currentStreak}
           value={stats.currentStreak}
           icon={Flame}
           gradient="from-orange-400 to-red-600"
@@ -90,13 +94,13 @@ export default async function DashboardPage() {
         {recommendedQuiz && (
           <Card className="border-2 border-primary/20">
             <CardHeader>
-              <CardTitle className="text-lg">Recommended Quiz</CardTitle>
+              <CardTitle className="text-lg">{dict.recommendedQuiz}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
                 <h3 className="font-semibold">{recommendedQuiz.title}</h3>
                 <Badge variant="secondary" className="mt-1">
-                  {ERA_LABELS[recommendedQuiz.era]}
+                  {getEraLabel(recommendedQuiz.era, dict)}
                 </Badge>
                 <p className="text-sm text-muted-foreground mt-2">
                   {recommendedQuiz.description}
@@ -104,7 +108,7 @@ export default async function DashboardPage() {
               </div>
               <Button asChild>
                 <Link href={`/quizzes/${recommendedQuiz.id}`}>
-                  Start Quiz
+                  {dict.startQuiz}
                   <ArrowRight className="h-4 w-4 ml-1" />
                 </Link>
               </Button>
@@ -114,22 +118,22 @@ export default async function DashboardPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg">Recent Activity</CardTitle>
+            <CardTitle className="text-lg">{dict.recentActivity}</CardTitle>
             {recentAttempts.length > 0 && (
               <Link
                 href="/history"
                 className="text-sm text-primary hover:underline"
               >
-                View all
+                {dict.viewAll}
               </Link>
             )}
           </CardHeader>
           <CardContent>
             {recentAttempts.length === 0 ? (
               <p className="text-sm text-muted-foreground py-4 text-center">
-                No quizzes completed yet.{" "}
+                {dict.noQuizzesYet}{" "}
                 <Link href="/quizzes" className="text-primary hover:underline">
-                  Browse quizzes
+                  {dict.browseQuizzes}
                 </Link>
               </p>
             ) : (
@@ -144,7 +148,9 @@ export default async function DashboardPage() {
                       <p className="text-sm font-medium">{attempt.quiz.title}</p>
                       <p className="text-xs text-muted-foreground">
                         {attempt.completedAt
-                          ? new Date(attempt.completedAt).toLocaleDateString()
+                          ? new Date(attempt.completedAt).toLocaleDateString(
+                              locale === "el" ? "el-GR" : "en-US"
+                            )
                           : ""}
                       </p>
                     </div>

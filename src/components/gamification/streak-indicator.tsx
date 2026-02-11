@@ -1,4 +1,7 @@
+"use client"
+
 import { Flame } from "lucide-react"
+import { useLocale } from "@/lib/i18n/locale-context"
 
 export function StreakIndicator({
   current,
@@ -7,6 +10,8 @@ export function StreakIndicator({
   current: number
   longest: number
 }) {
+  const { dict } = useLocale()
+
   return (
     <div className="flex items-center gap-2">
       <div
@@ -18,7 +23,7 @@ export function StreakIndicator({
         <span className="text-xl font-bold">{current}</span>
       </div>
       <span className="text-sm text-muted-foreground">
-        current &middot; {longest} best
+        {dict.streakCurrent} &middot; {longest} {dict.streakBest}
       </span>
     </div>
   )

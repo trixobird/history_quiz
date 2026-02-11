@@ -1,3 +1,5 @@
+"use client"
+
 import {
   Table,
   TableBody,
@@ -9,6 +11,7 @@ import {
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { LevelBadge } from "./level-badge"
 import { Trophy } from "lucide-react"
+import { useLocale } from "@/lib/i18n/locale-context"
 
 interface LeaderboardEntry {
   id: string
@@ -28,15 +31,17 @@ export function LeaderboardTable({
   entries: LeaderboardEntry[]
   currentUserId?: string
 }) {
+  const { dict } = useLocale()
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
           <TableHead className="w-12">#</TableHead>
-          <TableHead>Player</TableHead>
-          <TableHead>Level</TableHead>
-          <TableHead className="text-right">Points</TableHead>
-          <TableHead className="text-right">Quizzes</TableHead>
+          <TableHead>{dict.colPlayer}</TableHead>
+          <TableHead>{dict.colLevel}</TableHead>
+          <TableHead className="text-right">{dict.colPoints}</TableHead>
+          <TableHead className="text-right">{dict.colQuizzes}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -74,7 +79,7 @@ export function LeaderboardTable({
                     <p className="font-medium text-sm">
                       {entry.name || entry.email.split("@")[0]}
                       {isCurrentUser && (
-                        <span className="text-muted-foreground ml-1">(you)</span>
+                        <span className="text-muted-foreground ml-1">({dict.you})</span>
                       )}
                     </p>
                   </div>

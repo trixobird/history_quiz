@@ -2,16 +2,16 @@ import { Difficulty } from "@prisma/client"
 import { POINT_VALUES } from "./constants"
 
 export const LEVEL_THRESHOLDS = [
-  { level: 1, title: "History Novice", pointsRequired: 0 },
-  { level: 2, title: "Curious Student", pointsRequired: 200 },
-  { level: 3, title: "Amateur Historian", pointsRequired: 500 },
-  { level: 4, title: "Knowledge Seeker", pointsRequired: 1000 },
-  { level: 5, title: "History Buff", pointsRequired: 2000 },
-  { level: 6, title: "Chronicle Keeper", pointsRequired: 3500 },
-  { level: 7, title: "Master Scholar", pointsRequired: 5500 },
-  { level: 8, title: "History Sage", pointsRequired: 8000 },
-  { level: 9, title: "Grand Historian", pointsRequired: 12000 },
-  { level: 10, title: "Legendary Oracle", pointsRequired: 18000 },
+  { level: 1, pointsRequired: 0 },
+  { level: 2, pointsRequired: 200 },
+  { level: 3, pointsRequired: 500 },
+  { level: 4, pointsRequired: 1000 },
+  { level: 5, pointsRequired: 2000 },
+  { level: 6, pointsRequired: 3500 },
+  { level: 7, pointsRequired: 5500 },
+  { level: 8, pointsRequired: 8000 },
+  { level: 9, pointsRequired: 12000 },
+  { level: 10, pointsRequired: 18000 },
 ] as const
 
 export function calculateLevel(totalPoints: number) {
@@ -19,11 +19,10 @@ export function calculateLevel(totalPoints: number) {
     if (totalPoints >= LEVEL_THRESHOLDS[i].pointsRequired) {
       return {
         level: LEVEL_THRESHOLDS[i].level,
-        title: LEVEL_THRESHOLDS[i].title,
       }
     }
   }
-  return { level: 1, title: "History Novice" }
+  return { level: 1 }
 }
 
 export function getNextLevel(totalPoints: number) {

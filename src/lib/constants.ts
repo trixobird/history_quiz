@@ -1,18 +1,5 @@
 import { Era, Difficulty } from "@prisma/client"
 
-export const ERA_LABELS: Record<Era, string> = {
-  ANCIENT_WORLD: "Ancient World",
-  MEDIEVAL: "Medieval",
-  RENAISSANCE: "Renaissance",
-  AGE_OF_EXPLORATION: "Age of Exploration",
-  INDUSTRIAL_REVOLUTION: "Industrial Revolution",
-  WORLD_WAR_1: "World War I",
-  WORLD_WAR_2: "World War II",
-  COLD_WAR: "Cold War",
-  MODERN_HISTORY: "Modern History",
-  MIXED_GENERAL: "Mixed / General",
-}
-
 export const ERA_COLORS: Record<Era, string> = {
   ANCIENT_WORLD: "bg-amber-500",
   MEDIEVAL: "bg-stone-500",
@@ -37,13 +24,6 @@ export const ERA_GRADIENTS: Record<Era, string> = {
   COLD_WAR: "from-blue-400 to-indigo-800",
   MODERN_HISTORY: "from-emerald-400 to-teal-700",
   MIXED_GENERAL: "from-fuchsia-400 to-pink-700",
-}
-
-export const DIFFICULTY_LABELS: Record<Difficulty, string> = {
-  EASY: "Easy",
-  MEDIUM: "Medium",
-  HARD: "Hard",
-  EXPERT: "Expert",
 }
 
 export const DIFFICULTY_COLORS: Record<Difficulty, string> = {

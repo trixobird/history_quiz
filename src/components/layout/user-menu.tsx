@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { useState, useRef, useEffect } from "react"
 import { User, LogOut } from "lucide-react"
+import { useLocale } from "@/lib/i18n/locale-context"
 
 interface UserMenuProps {
   user: {
@@ -18,6 +19,7 @@ interface UserMenuProps {
 export function UserMenu({ user }: UserMenuProps) {
   const [open, setOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
+  const { dict } = useLocale()
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -52,7 +54,7 @@ export function UserMenu({ user }: UserMenuProps) {
       {open && (
         <div className="absolute right-0 top-full mt-2 w-56 rounded-lg border bg-card p-2 shadow-lg">
           <div className="px-3 py-2 border-b mb-2">
-            <p className="text-sm font-medium">{user.name || "Quiz Player"}</p>
+            <p className="text-sm font-medium">{user.name || dict.quizPlayer}</p>
             <p className="text-xs text-muted-foreground">{user.email}</p>
           </div>
           <Link
@@ -61,7 +63,7 @@ export function UserMenu({ user }: UserMenuProps) {
             className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-secondary transition-colors"
           >
             <User className="h-4 w-4" />
-            Profile
+            {dict.profile}
           </Link>
           <form action={handleSignOut}>
             <Button
@@ -70,7 +72,7 @@ export function UserMenu({ user }: UserMenuProps) {
               className="w-full justify-start gap-2 px-3 text-destructive hover:text-destructive"
             >
               <LogOut className="h-4 w-4" />
-              Sign out
+              {dict.signOut}
             </Button>
           </form>
         </div>
