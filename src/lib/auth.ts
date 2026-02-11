@@ -10,7 +10,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   providers: [
     Resend({
-      from: "History Quiz <onboarding@resend.dev>",
+      from: process.env.EMAIL_FROM || "History Quiz <onboarding@resend.dev>",
     }),
   ],
 })
