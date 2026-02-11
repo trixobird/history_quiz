@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Ancient scroll favicon for History Quiz -->
+  <defs>
+    <linearGradient id="parchment" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f5e6c8"/>
+      <stop offset="100%" stop-color="#e8d5a3"/>
+    </linearGradient>
+    <linearGradient id="roll" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d4a853"/>
+      <stop offset="50%" stop-color="#c9922a"/>
+      <stop offset="100%" stop-color="#d4a853"/>
+    </linearGradient>
+  </defs>
+  <!-- Scroll body -->
+  <rect x="14" y="12" width="36" height="40" rx="2" fill="url(#parchment)" stroke="#b8860b" stroke-width="1.5"/>
+  <!-- Top roll -->
+  <rect x="10" y="8" width="44" height="8" rx="4" fill="url(#roll)" stroke="#8b6914" stroke-width="1.5"/>
+  <!-- Bottom roll -->
+  <rect x="10" y="48" width="44" height="8" rx="4" fill="url(#roll)" stroke="#8b6914" stroke-width="1.5"/>
+  <!-- Text lines on scroll -->
+  <line x1="22" y1="22" x2="42" y2="22" stroke="#8b7355" stroke-width="2" stroke-linecap="round"/>
+  <line x1="22" y1="28" x2="42" y2="28" stroke="#8b7355" stroke-width="2" stroke-linecap="round"/>
+  <line x1="22" y1="34" x2="38" y2="34" stroke="#8b7355" stroke-width="2" stroke-linecap="round"/>
+  <line x1="22" y1="40" x2="42" y2="40" stroke="#8b7355" stroke-width="2" stroke-linecap="round"/>
+  <!-- Question mark accent -->
+  <text x="32" y="46" font-family="serif" font-size="28" font-weight="bold" fill="#8b6914" text-anchor="middle" opacity="0.2">?</text>
+</svg>
